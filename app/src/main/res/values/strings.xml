@@ -20,4 +20,8 @@
     <string name="stop">Stop</string>
     <string name="period">.</string>
     <string name="colon">:</string>
+    <string name="intenttunnel_package_name">com.masterbaron.intenttunnel</string>
+    <string name="intenttunnel_class_name">com.masterbaron.intenttunnel.router.RouterService</string>
+    <string name="sensordrone_package_name">me.izen.sensordroneforglass</string>
+    <string name="sensordrone_class_name">.SensordroneControl</string>
 </resources>

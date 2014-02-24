@@ -3,21 +3,47 @@ package me.izen.glasssensor.app;
 
 
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.concurrent.TimeUnit;
 
+
 /**
  * Created by joe on 2/20/14.
  */
 public class SensorView extends FrameLayout {
+    private static String TAG = SensorView.class.getName();
 
+
+    private Intent sensorUpdateIntent;
+
+
+    private final BroadcastReceiver sensorUpdateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "BroadcastReceiver.onReceive()");
+            int id = intent.getIntExtra("id", -1);
+            String data = intent.getStringExtra("data");
+
+            Log.d(TAG, "BroadcastReceiver.onReceive() - id = " + id);
+            Log.d(TAG, "BroadcastReceiver.onReceive() - data = " + data);
+
+            if(id != -1) {
+                textViews[id].setText(data);
+            }
+
+        }
+    };
 
     /**
      * Interface to listen for changes on the view layout.
@@ -45,6 +71,7 @@ public class SensorView extends FrameLayout {
     private final TextView mAltitude;
     private final TextView mBattery;
 
+    private TextView textViews[];
 
     private boolean mStarted;
     private boolean mForceStart;
@@ -67,6 +94,9 @@ public class SensorView extends FrameLayout {
         super(context, attrs, style);
         LayoutInflater.from(context).inflate(R.layout.card_sensor, this);
 
+
+        sensorUpdateIntent = context.registerReceiver(sensorUpdateReceiver, new IntentFilter("me.izen.glasssensor.msg.sensor-update"));
+
         mMinuteView = (TextView) findViewById(R.id.minute);
         mSecondView = (TextView) findViewById(R.id.second);
         mCentiSecondView = (TextView) findViewById(R.id.centi_second);
@@ -81,6 +111,19 @@ public class SensorView extends FrameLayout {
         mVoltage = (TextView) findViewById(R.id.voltage);
         mAltitude = (TextView) findViewById(R.id.altitude);
         mBattery = (TextView) findViewById(R.id.battery);
+
+        textViews = new TextView[]{
+                mTemperature,
+                mHumidity,
+                mPressure,
+                mIRTemperature,
+                mIlluminance,
+                mGas,
+                mProximity,
+                mVoltage,
+                mAltitude,
+                mBattery
+        };
 
         initSensorView(SystemClock.elapsedRealtime());
     }
@@ -140,6 +183,7 @@ public class SensorView extends FrameLayout {
     public void stop() {
         mStarted = false;
         updateRunning();
+        getContext().unregisterReceiver(sensorUpdateReceiver);
     }
 
     @Override

@@ -16,17 +16,17 @@
 
 <resources>
     <style name="ChronometerComponent">
-        <item name="android:layout_width">50px</item>
-        <item name="android:layout_height">50px</item>
+        <item name="android:layout_width">33dp</item>
+        <item name="android:layout_height">33dp</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginTop">0px</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">30px</item>
+        <item name="android:textSize">20dp</item>
+        <item name="android:background">@android:color/black</item>
     </style>
 
     <style name="ChronometerIcon">
-        <item name="android:layout_width">55px</item>
-        <item name="android:layout_height">55px</item>
+        <item name="android:layout_width">36dp</item>
+        <item name="android:layout_height">36dp</item>
         <item name="android:layout_gravity">center</item>
     </style>
 
@@ -39,20 +39,22 @@
     </style>
 
     <style name="SensorData">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingBottom">5dp</item>
         <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:minWidth">60dp</item>
+        <item name="android:minWidth">110dp</item>
         <item name="android:background">@color/blue</item>
         <item name="android:textColor">@color/white</item>
 
     </style>
 
     <style name="sensorDataLabel">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item>
         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-        <item name="android:paddingRight">5dp</item>
-        <item name="android:paddingBottom">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginRight">2dp</item>
     </style>
 
 </resources>

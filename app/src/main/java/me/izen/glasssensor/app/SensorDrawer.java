@@ -1,85 +1,77 @@
 package me.izen.glasssensor.app;
 
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Canvas;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.SystemClock;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
 
+import java.net.BindException;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by joe on 2/20/14.
  */
-public class SensorDrawer  implements SurfaceHolder.Callback {
+public class SensorDrawer implements SurfaceHolder.Callback {
 
-    private static final String TAG = "SensorDrawer";
 
-    private static final long SEC_TO_MILLIS = TimeUnit.SECONDS.toMillis(1);
-    private static final int SOUND_PRIORITY = 1;
-    private static final int MAX_STREAMS = 1;
-    private static final int COUNT_DOWN_VALUE = 5;
-
-    private final SoundPool mSoundPool;
-    private final int mStartSoundId;
-    private final int mCountDownSoundId;
-
-    private final ConnectView mConnectView;
-    private final SensorView mSensorView;
-
-    private long mCurrentTimeSeconds;
-    private boolean mCountDownSoundPlayed;
-
+    private static String TAG = SensorDrawer.class.getName();
     private SurfaceHolder mHolder;
-    private boolean mCountDownDone;
+    private final SensorView mSensorView;
+    private Context context;
+    private Messenger mService;
+    private boolean mBound;
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            Log.d(TAG, "onServiceConnected()");
+
+            mService = new Messenger(service);
+
+            Intent start = new Intent("android.intent.action.MAIN");
+            start.setClassName(context.getString(R.string.sensordrone_package_name), context.getString(R.string.sensordrone_class_name));
+            start.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            try {
+                mService.send(Message.obtain(null, 1002, start));
+                mBound = true;
+            } catch (RemoteException e) {
+                Log.e(TAG, "Failed: ", e);
+            }
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            Log.e(TAG, "onServiceDisconnected()");
+
+            mService = null;
+            mBound = false;
+        }
+    };
 
     public SensorDrawer(Context context) {
-        mConnectView = new ConnectView(context);
-        mConnectView.setCountDown(COUNT_DOWN_VALUE);
-        mConnectView.setListener(new ConnectView.CountDownListener() {
-
-            @Override
-            public void onTick(long millisUntilFinish) {
-                maybePlaySound(millisUntilFinish);
-                draw(mConnectView);
+        Log.d(TAG, "SensorDrawer()");
+        this.context = context;
+        try {
+            Intent in = new Intent();
+            in.setClassName(context.getString(R.string.intenttunnel_package_name), context.getString(R.string.intenttunnel_class_name));
+            if (!this.context.bindService(in, mConnection, Context.BIND_AUTO_CREATE)) {
+                throw new BindException("failed to bind");
             }
+        } catch (Exception e) {
+            Log.e(TAG, "onStart error", e);
+        }
 
-            @Override
-            public void onFinish(boolean connected) {
-                if(connected) {
-                    mCountDownDone = true;
-                    mSensorView.initSensorView(SystemClock.elapsedRealtime());
-                    if (mHolder != null) {
-                        mSensorView.start();
-                    }
-                    playSound(mStartSoundId);
-                }
-                else {
-                    draw(mConnectView);
-                }
-            }
-
-            private void maybePlaySound(long millisUntilFinish) {
-                long currentTimeSeconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinish);
-                long milliSecondsPart = millisUntilFinish % SEC_TO_MILLIS;
-
-                if (currentTimeSeconds != mCurrentTimeSeconds) {
-                    mCountDownSoundPlayed = false;
-                    mCurrentTimeSeconds = currentTimeSeconds;
-                }
-                if (!mCountDownSoundPlayed
-                        && (milliSecondsPart <= ConnectView.ANIMATION_DURATION_IN_MILLIS)) {
-                    playSound(mCountDownSoundId);
-                    mCountDownSoundPlayed = true;
-                }
-            }
-        });
-
-        mSensorView = new SensorView(context);
+        mSensorView = new SensorView(this.context);
         mSensorView.setListener(new SensorView.ChangeListener() {
 
             @Override
@@ -89,20 +81,14 @@ public class SensorDrawer  implements SurfaceHolder.Callback {
         });
         mSensorView.setForceStart(true);
 
-        mSoundPool = new SoundPool(MAX_STREAMS, AudioManager.STREAM_MUSIC, 0);
-        mStartSoundId = mSoundPool.load(context, R.raw.start, SOUND_PRIORITY);
-        mCountDownSoundId = mSoundPool.load(context, R.raw.countdown_bip, SOUND_PRIORITY);
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.d(TAG, "surfaceChanged()");
         // Measure and layout the view with the canvas dimensions.
         int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
         int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
-
-        mConnectView.measure(measuredWidth, measuredHeight);
-        mConnectView.layout(
-                0, 0, mConnectView.getMeasuredWidth(), mConnectView.getMeasuredHeight());
 
         mSensorView.measure(measuredWidth, measuredHeight);
         mSensorView.layout(
@@ -113,11 +99,7 @@ public class SensorDrawer  implements SurfaceHolder.Callback {
     public void surfaceCreated(SurfaceHolder holder) {
         Log.d(TAG, "Surface created");
         mHolder = holder;
-        if (mCountDownDone) {
-            mSensorView.start();
-        } else {
-            mConnectView.start();
-        }
+        mSensorView.start();
     }
 
     @Override
@@ -128,9 +110,14 @@ public class SensorDrawer  implements SurfaceHolder.Callback {
     }
 
     public void stop() {
-        mConnectView.stop();
+        Log.d(TAG, "stop()");
         mSensorView.stop();
+        if (mBound) {
+            this.context.unbindService(mConnection);
+            mBound = false;
+        }
     }
+
     /**
      * Draws the view in the SurfaceHolder's canvas.
      */
@@ -147,16 +134,5 @@ public class SensorDrawer  implements SurfaceHolder.Callback {
         }
     }
 
-    /**
-     * Plays the provided {@code soundId}.
-     */
-    private void playSound(int soundId) {
-        mSoundPool.play(soundId,
-                1 /* leftVolume */,
-                1 /* rightVolume */,
-                SOUND_PRIORITY,
-                0 /* loop */,
-                1 /* rate */);
-    }
 
 }

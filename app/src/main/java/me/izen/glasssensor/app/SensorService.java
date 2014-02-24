@@ -23,6 +23,7 @@ public class SensorService extends Service {
     private TimelineManager mTimelineManager;
     private LiveCard mLiveCard;
 
+
     @Override
     public void onCreate() {
         super.onCreate();

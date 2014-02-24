@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.lang.Long;
 import java.util.concurrent.TimeUnit;
+
 
 
 /**
@@ -82,13 +82,16 @@ public class ConnectView extends FrameLayout {
 
     private final Handler mHandler = new Handler();
 
+    private boolean connectionInProgress = false;
     private final Runnable mUpdateViewRunnable = new Runnable() {
         @Override
         public void run() {
             final long millisLeft = mStopTimeInFuture - SystemClock.elapsedRealtime();
 
+
             // Count down is done.
             if (millisLeft <= 0) {
+                connectionInProgress = false;
                 mStarted = false;
                 updateStatusView("no connection");
                 if (mListener != null) {
@@ -96,9 +99,6 @@ public class ConnectView extends FrameLayout {
                 }
             } else {
                 // TODO : check if the sensor is connected, if so then show connected and finish up this activity
-                if(millisLeft < 100) {
-                    mListener.onFinish(true);
-                }
                 updateView(millisLeft, "searching...");
                 if (mListener != null) {
                     mListener.onTick(millisLeft);

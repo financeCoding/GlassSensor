@@ -18,75 +18,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black" >
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|left|top"
-        android:orientation="horizontal" >
-        <TextView
-            android:id="@+id/minute"
-            style="@style/ChronometerComponent"
-            android:textSize="20dp"
-            android:layout_width="39dp"
-            android:layout_height="50dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/colon"
-            android:id="@+id/textView"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/second"
-            style="@style/ChronometerComponent"
-            android:textSize="20dp"
-            android:layout_width="39dp"
-            android:layout_height="50dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/period"
-            android:id="@+id/textView2"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:id="@+id/centi_second"
-            style="@style/ChronometerComponent"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp" />
-    </LinearLayout>
+    android:keepScreenOn="true"
+    android:alpha="1">
 
     <TableLayout
         android:layout_width="228dp"
-        android:layout_height="184dp"
-        android:layout_gravity="center_horizontal|bottom|left">
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal|left|top">
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Temperature"
                 android:id="@+id/textView3"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/temperature"
-                android:paddingLeft="10dp"
-                style="@style/SensorData"
-                android:minWidth="60dp" />
+                style="@style/SensorData" />
         </TableRow>
 
         <TableRow
@@ -95,19 +46,12 @@
             android:id="@+id/tableRow">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Humidity"
                 android:id="@+id/textView5"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/humidity"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -117,19 +61,12 @@
             android:id="@+id/tableRow2">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Pressure"
                 android:id="@+id/textView4"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/pressure"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -139,19 +76,12 @@
             android:id="@+id/tableRow3">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="IR Temperature"
                 android:id="@+id/textView6"
-                style="@style/sensorDataLabel"
-                android:paddingRight="5dp" />
+                style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/irTemperature"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -161,49 +91,35 @@
             android:id="@+id/tableRow4" >
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Illuminance"
                 android:id="@+id/textView7"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/illuminance"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
     </TableLayout>
 
     <TableLayout
-        android:layout_width="228dp"
-        android:layout_height="184dp"
-        android:layout_gravity="center_horizontal|bottom|right"
-        android:id="@+id/tableLayout"
-        android:paddingLeft="25dp">
+        android:layout_width="184dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal|right|top"
+        android:id="@+id/tableLayout2">
 
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Gas"
                 android:id="@+id/textView8"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/gas"
-                style="@style/SensorData"
-                android:minWidth="60dp" />
+                style="@style/SensorData" />
         </TableRow>
 
         <TableRow
@@ -212,19 +128,12 @@
             android:id="@+id/tableRow5">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Proximity"
                 android:id="@+id/textView10"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/proximity"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -234,19 +143,12 @@
             android:id="@+id/tableRow6">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Voltage"
                 android:id="@+id/textView12"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/voltage"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -256,19 +158,12 @@
             android:id="@+id/tableRow7">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Altitude"
                 android:id="@+id/textView14"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/altitude"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
 
@@ -278,21 +173,46 @@
             android:id="@+id/tableRow8">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="Battery"
                 android:id="@+id/textView16"
                 style="@style/sensorDataLabel" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/battery"
-                android:paddingLeft="10dp"
                 style="@style/SensorData" />
         </TableRow>
     </TableLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal|bottom">
+        <TextView
+            android:id="@+id/minute"
+            style="@style/ChronometerComponent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/colon"
+            android:id="@+id/textView"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/second"
+            style="@style/ChronometerComponent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/period"
+            android:id="@+id/textView2"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/centi_second"
+            style="@style/ChronometerComponent" />
+    </LinearLayout>
 
 </FrameLayout>
